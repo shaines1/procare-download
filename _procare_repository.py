@@ -27,7 +27,11 @@ class ProcareRepository:
 
     def _auth(self):
         response = self._session.post(f'{BASE_URL}auth', json={'email': self._email, 'password': self._password})
-        self._session.headers.update({'authorization': f"Bearer {response.json()['user']['auth_token']}"})
+        try:
+            self._session.headers.update({'authorization': f"Bearer {response.json()['user']['auth_token']}"})
+        except KeyError:
+            self._logger.error(f'failed to authenticate with Procare. error details:\n\n    {response.text}\n')
+            raise ConnectionRefusedError
 
     def get_kids(self):
         response = self._session.get(f'{BASE_URL}parent/kids')
