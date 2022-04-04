@@ -42,13 +42,11 @@ def cleanup_photos(input_dir_path, output_dir_path):
 
 def cleanup_videos(input_dir_path, output_dir_path):
     for path in input_dir_path.glob('*.mp4'):
-        # TODO
-        pass
+        file_datetime = datetime.datetime.fromtimestamp(int(path.stem[:10]))
+        path.rename((output_dir_path / file_datetime.strftime('%Y%m%d_%H%M%S.mp4')))
 
 def main():
     args = _parse_args()
-
-    # logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     input_dir_path = args.input_dir.expanduser()
     output_dir_path = args.output_dir.expanduser()
