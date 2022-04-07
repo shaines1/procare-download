@@ -38,7 +38,10 @@ def cleanup_photos(input_dir_path, output_dir_path):
         output_bytes = io.BytesIO()
         piexif.insert(piexif.dump(exif_dict), file_bytes, output_bytes)
 
-        (output_dir_path / file_datetime.strftime('%Y%m%d_%H%M%S.jpg')).write_bytes(output_bytes.getbuffer())
+        new_path = output_dir_path / file_datetime.strftime('%Y%m%d_%H%M%S.jpg')
+        if new_path.is_file():
+            new_path = output_dir_path / f'{file_datetime.strftime("%Y%m%d_%H%M%S")}-{path.stem[10:]}.jpg'
+        new_path.write_bytes(output_bytes.getbuffer())
 
 def cleanup_videos(input_dir_path, output_dir_path):
     for path in input_dir_path.glob('*.mp4'):
